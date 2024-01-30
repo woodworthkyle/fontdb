@@ -181,9 +181,9 @@ impl Database {
             family_serif: "Times New Roman".to_string(),
             family_sans_serif: "Arial".to_string(),
             family_cursive: "Comic Sans MS".to_string(),
-            #[cfg(not(target_os = "macos"))]
+            #[cfg(not(any(target_os = "macos", target_os = "ios")))]
             family_fantasy: "Impact".to_string(),
-            #[cfg(target_os = "macos")]
+            #[cfg(any(target_os = "macos", target_os = "ios"))]
             family_fantasy: "Papyrus".to_string(),
             family_monospace: "Courier New".to_string(),
         }
@@ -263,8 +263,19 @@ impl Database {
     // A non-generic version.
     #[cfg(all(feature = "fs", feature = "memmap"))]
     fn load_font_file_impl(&mut self, path: &std::path::Path) -> Result<(), std::io::Error> {
-        let file = std::fs::File::open(path)?;
-        let data: &[u8] = unsafe { &memmap2::MmapOptions::new().map(&file)? };
+        
+        use cocoa::base::{id, nil};
+        use cocoa::foundation::{NSFileManager, NSString, NSData};
+        let data : &[u8] = unsafe {
+            let fm : id = NSFileManager::defaultManager();
+            let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
+            let contentsNSData : id = fm.contentsAtPath(pathNSString);
+            let contentsLength : usize = contentsNSData.length() as usize;
+            std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
+        };
+
+        //let file = std::fs::File::open(path)?;
+        //let data: &[u8] = unsafe { &memmap2::MmapOptions::new().map(&file)? };
 
         self.load_fonts_from_file(path, data);
         Ok(())
@@ -381,6 +392,17 @@ impl Database {
                 self.load_fonts_dir(home_path.join("Library/Fonts"));
             }
         }
+        
+        // iOS
+        #[cfg(target_os = "ios")]
+        {   
+            //println!("Attempting to load system fonts...");
+            //self.load_fonts_dir("/Library/Fonts");
+            //self.load_fonts_dir("/System/Library/Fonts");
+            //self.load_font_file("/System/Library/Fonts/Geneva.ttf");
+            self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/target/aarch64-apple-ios-macabi/debug/bundle/ios/counter.app/Geneva.ttf");
+            //self.load_fonts_dir("/Users/kwoodworth/Library/Fonts/Better Grade.ttf");
+        }
 
         // Redox OS.
         #[cfg(target_os = "redox")]
@@ -389,7 +411,7 @@ impl Database {
         }
 
         // Linux.
-        #[cfg(all(unix, not(any(target_os = "macos", target_os = "android"))))]
+        #[cfg(all(unix, not(any(target_os = "macos", target_os = "ios", target_os = "android"))))]
         {
             #[cfg(feature = "fontconfig")]
             {
@@ -414,7 +436,7 @@ impl Database {
     #[cfg(all(
         unix,
         feature = "fontconfig",
-        not(any(target_os = "macos", target_os = "android"))
+        not(any(target_os = "macos", target_os = "ios", target_os = "android"))
     ))]
     fn load_fontconfig(&mut self) {
         use std::path::Path;
@@ -662,9 +684,25 @@ impl Database {
                 return Some((data.clone(), face_index));
             }
             Source::File(ref path) => {
-                let file = std::fs::File::open(path).ok()?;
-                let shared_data = std::sync::Arc::new(memmap2::MmapOptions::new().map(&file).ok()?)
+                
+                // This might be the problem
+                // I had to replace memmap2 code earlier, but it was more related to failed
+                // OS/sys calls
+                use cocoa::base::{id, nil};
+                use cocoa::foundation::{NSFileManager, NSString, NSData};
+                let bytesData : &[u8] = unsafe {
+                    let fm : id = NSFileManager::defaultManager();
+                    let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
+                    let contentsNSData : id = fm.contentsAtPath(pathNSString);
+                    let contentsLength : usize = contentsNSData.length() as usize;
+                    std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
+                };
+                let shared_data = std::sync::Arc::new(bytesData)
                     as std::sync::Arc<dyn AsRef<[u8]> + Send + Sync>;
+                //let file = std::fs::File::open(path).ok()?;
+                //let shared_data = std::sync::Arc::new(memmap2::MmapOptions::new().map(&file).ok()?)
+                //    as std::sync::Arc<dyn AsRef<[u8]> + Send + Sync>;
+
                 (path.clone(), shared_data)
             }
             Source::SharedFile(_, data) => {
