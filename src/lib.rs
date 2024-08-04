@@ -278,7 +278,7 @@ impl Database {
             //if fm.fileExistsAtPath(pathNSString) {
                 let contentsNSData : id = fm.contentsAtPath(pathNSString);
                 let contentsLength : usize = contentsNSData.length() as usize;
-                std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength);
+                std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
             //}
 
         };
