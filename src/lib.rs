@@ -276,9 +276,9 @@ impl Database {
             let fm : id = NSFileManager::defaultManager();
             //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
             //if fm.fileExistsAtPath(pathNSString) {
-                let contentsNSData : id = fm.contentsAtPath(pathNSString);
-                let contentsLength : usize = contentsNSData.length() as usize;
-                std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
+            let contentsNSData : id = fm.contentsAtPath(pathNSString);
+            let contentsLength : usize = contentsNSData.length() as usize;
+            std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
             //}
 
         };
@@ -700,11 +700,19 @@ impl Database {
                 use cocoa::base::{id, nil};
                 use cocoa::foundation::{NSFileManager, NSString, NSData};
                 let bytesData : &[u8] = unsafe {
+                    let bd : id = NSBundle::mainBundle();
+                    //NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"Geneva" ofType:@"ttf"];
+                    let pathNSString : id = bd.pathForResource(
+                        NSString::alloc(nil).init_str("Geneva"),
+                        NSString::alloc(nil).init_str("ttf")
+                    );
                     let fm : id = NSFileManager::defaultManager();
-                    let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
+                    //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
+                    //if fm.fileExistsAtPath(pathNSString) {
                     let contentsNSData : id = fm.contentsAtPath(pathNSString);
                     let contentsLength : usize = contentsNSData.length() as usize;
                     std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
+                    //}
                 };
                 let shared_data = std::sync::Arc::new(bytesData)
                     as std::sync::Arc<dyn AsRef<[u8]> + Send + Sync>;
