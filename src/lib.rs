@@ -698,7 +698,7 @@ impl Database {
                 // I had to replace memmap2 code earlier, but it was more related to failed
                 // OS/sys calls
                 use cocoa::base::{id, nil};
-                use cocoa::foundation::{NSFileManager, NSString, NSData};
+                use cocoa::foundation::{NSFileManager, NSString, NSData, NSBundle};
                 let bytesData : &[u8] = unsafe {
                     let bd : id = NSBundle::mainBundle();
                     //NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"Geneva" ofType:@"ttf"];
