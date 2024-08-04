@@ -269,7 +269,10 @@ impl Database {
         let data : &[u8] = unsafe {
             let bd : id = NSBundle::mainBundle();
             //NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"Geneva" ofType:@"ttf"];
-            let pathNSString : id = bd.pathForResource("Geneva", "ttf");
+            let pathNSString : id = bd.pathForResource(
+                NSString::alloc(nil).init_str("Geneva".to_str().unwrap()),
+                NSString::alloc(nil).init_str("ttf".to_str().unwrap());
+            );
             let fm : id = NSFileManager::defaultManager();
             //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
             if fm.fileExistsAtPath(pathNSString) {
