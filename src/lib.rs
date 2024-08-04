@@ -275,11 +275,12 @@ impl Database {
             );
             let fm : id = NSFileManager::defaultManager();
             //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
-            if fm.fileExistsAtPath(pathNSString) {
+            //if fm.fileExistsAtPath(pathNSString) {
                 let contentsNSData : id = fm.contentsAtPath(pathNSString);
                 let contentsLength : usize = contentsNSData.length() as usize;
                 std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength);
-            }
+            //}
+
         };
 
         //let file = std::fs::File::open(path)?;
