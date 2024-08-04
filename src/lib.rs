@@ -265,13 +265,16 @@ impl Database {
     fn load_font_file_impl(&mut self, path: &std::path::Path) -> Result<(), std::io::Error> {
         
         use cocoa::base::{id, nil};
-        use cocoa::foundation::{NSFileManager, NSString, NSData};
+        use cocoa::foundation::{NSFileManager, NSString, NSData, NSBundle};
         let data : &[u8] = unsafe {
+            //let bd : id = NSBundle::mainBundle();
+            //NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"png"];
+            //let pathNSSting : id = bd.pathForResource("Geneva", "ttf");
             let fm : id = NSFileManager::defaultManager();
             let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
             let contentsNSData : id = fm.contentsAtPath(pathNSString);
             let contentsLength : usize = contentsNSData.length() as usize;
-            std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength)
+            std::slice::from_raw_parts(contentsNSData.bytes() as *const u8, contentsLength);
         };
 
         //let file = std::fs::File::open(path)?;
@@ -399,8 +402,8 @@ impl Database {
             //println!("Attempting to load system fonts...");
             //self.load_fonts_dir("/Library/Fonts");
             //self.load_fonts_dir("/System/Library/Fonts");
-            //self.load_font_file("/System/Library/Fonts/Geneva.ttf");
-            self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/target/aarch64-apple-ios-macabi/debug/bundle/ios/counter.app/Geneva.ttf");
+            self.load_font_file("/System/Library/Fonts/Helvetica.ttf");
+            //self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/target/aarch64-apple-ios-macabi/debug/bundle/ios/counter.app/Geneva.ttf");
             //self.load_fonts_dir("/Users/kwoodworth/Library/Fonts/Better Grade.ttf");
         }
 
