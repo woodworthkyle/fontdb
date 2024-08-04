@@ -268,7 +268,7 @@ impl Database {
         use cocoa::foundation::{NSFileManager, NSString, NSData, NSBundle};
         let data : &[u8] = unsafe {
             let bd : id = NSBundle::mainBundle();
-            NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"Geneva" ofType:@"ttf"];
+            //NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"Geneva" ofType:@"ttf"];
             let pathNSString : id = bd.pathForResource("Geneva", "ttf");
             let fm : id = NSFileManager::defaultManager();
             //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
