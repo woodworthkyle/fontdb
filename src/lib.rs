@@ -270,8 +270,8 @@ impl Database {
             let bd : id = NSBundle::mainBundle();
             //NSString *pathToResource = [[NSBundle mainBundle] pathForResource:@"Geneva" ofType:@"ttf"];
             let pathNSString : id = bd.pathForResource(
-                NSString::alloc(nil).init_str("Geneva".to_string().unwrap()),
-                NSString::alloc(nil).init_str("ttf".to_string().unwrap())
+                NSString::alloc(nil).init_str("Geneva".to_string()),
+                NSString::alloc(nil).init_str("ttf".to_string())
             );
             let fm : id = NSFileManager::defaultManager();
             //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
