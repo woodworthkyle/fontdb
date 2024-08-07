@@ -409,8 +409,8 @@ impl Database {
             //self.load_fonts_dir("/Library/Fonts");
             //self.load_fonts_dir("/System/Library/Fonts");
             //self.load_font_file("/System/Library/Fonts/Helvetica.ttf");
-            //self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/target/aarch64-apple-ios-macabi/debug/bundle/ios/counter.app/Geneva.ttf");
-            self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/Geneva.ttf");
+            self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/target/aarch64-apple-ios-macabi/debug/bundle/ios/counter.app/Geneva.ttf");
+            //self.load_font_file("/Users/kwoodworth/code/rust/floem/examples/counter/Geneva.ttf");
             //self.load_fonts_dir("/Users/kwoodworth/Library/Fonts/Better Grade.ttf");
         }
 
