@@ -274,7 +274,7 @@ impl Database {
                 NSString::alloc(nil).init_str("ttf")
             );
             let fm : id = NSFileManager::defaultManager();
-            //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
+            let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
             //if fm.fileExistsAtPath(pathNSString) {
             let contentsNSData : id = fm.contentsAtPath(pathNSString);
             let contentsLength : usize = contentsNSData.length() as usize;
@@ -707,7 +707,7 @@ impl Database {
                         NSString::alloc(nil).init_str("ttf")
                     );
                     let fm : id = NSFileManager::defaultManager();
-                    //let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
+                    let pathNSString : id = NSString::alloc(nil).init_str(path.to_str().unwrap());
                     //if fm.fileExistsAtPath(pathNSString) {
                     let contentsNSData : id = fm.contentsAtPath(pathNSString);
                     let contentsLength : usize = contentsNSData.length() as usize;
